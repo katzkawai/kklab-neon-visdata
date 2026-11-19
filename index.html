@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>日本の少子高齢化をデータで視る（1950–2070）｜公式統計ビジュアライゼーション</title>
+  <meta name="description" content="総務省「国勢調査」「人口推計」、厚生労働省「人口動態統計」、社人研「日本の将来推計人口（令和5年推計）」をもとに、日本の少子高齢化の120年を5つのインタラクティブ可視化で読み解きます。" />
+  <meta property="og:title" content="日本の少子高齢化をデータで視る（1950–2070）" />
+  <meta property="og:description" content="人口ピラミッド、支え手構造、出生・死亡のワニの口、47都道府県タイル地図、国際比較の5つの視点で日本の人口構造を可視化。" />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <div id="reading-progress" class="reading-progress" aria-hidden="true"></div>
+
+  <header class="top-nav">
+    <div class="top-nav-inner">
+      <a href="#top" class="brand-mark">
+        <span class="brand-dot" aria-hidden="true"></span>
+        日本の少子高齢化データ可視化
+      </a>
+      <nav class="top-nav-links" aria-label="セクション移動">
+        <a href="#sec-pyramid">1. 人口ピラミッド</a>
+        <a href="#sec-structure">2. 人口構造と支え手</a>
+        <a href="#sec-vitals">3. 出生と死亡</a>
+        <a href="#sec-prefectures">4. 47都道府県の地域差</a>
+        <a href="#sec-international">5. 国際比較</a>
+        <a href="#sec-sources">出典・解説</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ヒーローセクション -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-kicker">Official Statistics Data Story · 1950 — 2070</div>
+        <h1 class="hero-title">
+          縮みゆく社会、変わりゆく形。<br />
+          <em>日本の少子高齢化</em>をデータで視る
+        </h1>
+        <p class="hero-lead">
+          1950年の戦後復興期から2024年の最新実績、そして2070年の将来推計まで——。
+          総務省統計局・厚生労働省・国立社会保障・人口問題研究所（社人研）の公式統計をもとに、
+          120年にわたる日本の人口構造の変化を5つのデータビジュアライゼーション技法で読み解きます。
+        </p>
+
+        <div class="kpi-grid" aria-label="主要指標サマリー">
+          <article class="kpi-card">
+            <div class="kpi-label">
+              <span>日本の総人口</span>
+              <span class="kpi-year-tag">2024年実績</span>
+            </div>
+            <div class="kpi-value-row">
+              <div class="kpi-value">1億2,380万人</div>
+              <div id="spark-total" class="kpi-spark-wrap"></div>
+            </div>
+            <div class="kpi-sub">2008年ピーク（1億2,808万人）から14年連続減。2070年には<strong>8,700万人</strong>へ。</div>
+          </article>
+
+          <article class="kpi-card">
+            <div class="kpi-label">
+              <span>高齢化率（65歳以上）</span>
+              <span class="kpi-year-tag">過去最高</span>
+            </div>
+            <div class="kpi-value-row">
+              <div class="kpi-value is-red">29.3%</div>
+              <div id="spark-aging" class="kpi-spark-wrap"></div>
+            </div>
+            <div class="kpi-sub">1950年は4.9%。2070年には<strong>38.7%</strong>（約2.6人に1人が高齢者）に達する推計。</div>
+          </article>
+
+          <article class="kpi-card">
+            <div class="kpi-label">
+              <span>合計特殊出生率</span>
+              <span class="kpi-year-tag">2024年確定</span>
+            </div>
+            <div class="kpi-value-row">
+              <div class="kpi-value is-amber">1.15</div>
+              <div id="spark-tfr" class="kpi-spark-wrap"></div>
+            </div>
+            <div class="kpi-sub">出生数は統計史上初の70万人割れ（68.6万人）。人口置換水準（2.07）から大きく乖離。</div>
+          </article>
+
+          <article class="kpi-card">
+            <div class="kpi-label">
+              <span>現役世代の支え手比率</span>
+              <span class="kpi-year-tag">高齢者1人あたり</span>
+            </div>
+            <div class="kpi-value-row">
+              <div class="kpi-value is-blue">2.0人</div>
+              <div id="spark-support" class="kpi-spark-wrap"></div>
+            </div>
+            <div class="kpi-sub">1950年は12.1人（胴上げ型）。2070年には<strong>1.3人（肩車型）</strong>まで低下する見通し。</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 1: 人口ピラミッド -->
+    <section id="sec-pyramid" class="viz-section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-num">Chapter 01 · Population Pyramid</div>
+            <h2 class="section-title">「富士山型」から「逆さピラミッド型」への120年</h2>
+            <p class="section-desc">
+              人口ピラミッドを時系列で動かすと、<strong>団塊の世代（1947–49年生）</strong>と<strong>団塊ジュニア（1971–74年生）</strong>という2つの大きな波が、
+              社会を押し上げながら高齢層へと移動していく構造が鮮明に見えます。1970年の輪郭（破線）と重ね合わせて変化を体感してください。
+            </p>
+          </div>
+          <div class="inline-legend">
+            <span class="legend-item"><i class="swatch swatch-young"></i>0–14歳</span>
+            <span class="legend-item"><i class="swatch swatch-working"></i>15–64歳</span>
+            <span class="legend-item"><i class="swatch swatch-elderly"></i>65歳以上</span>
+            <span class="legend-item"><i class="swatch swatch-ghost"></i>比較年シルエット</span>
+          </div>
+        </div>
+
+        <div class="viz-card">
+          <div class="viz-toolbar">
+            <div class="toolbar-group">
+              <button id="pyramid-play-btn" type="button" class="play-btn">
+                <span class="play-icon">▶</span> 1950→2070年を再生
+              </button>
+              <div class="segmented" role="group" aria-label="表示単位切替">
+                <button type="button" class="seg-btn is-active" data-pyramid-mode="count">実数（万人）</button>
+                <button type="button" class="seg-btn" data-pyramid-mode="share">構成比（%）</button>
+              </div>
+            </div>
+            <div class="toolbar-group">
+              <label for="pyramid-ghost-select" class="toggle-label">
+                比較シルエット:
+                <select id="pyramid-ghost-select" class="control-select">
+                  <option value="1970" selected>1970年（高度成長期）</option>
+                  <option value="2024">2024年（現在）</option>
+                  <option value="1950">1950年（戦後復興）</option>
+                  <option value="none">表示しない</option>
+                </select>
+              </label>
+              <label class="toggle-label">
+                <input id="pyramid-cohort-toggle" type="checkbox" checked />
+                団塊・団塊Jrを強調
+              </label>
+            </div>
+          </div>
+
+          <div class="slider-row">
+            <span class="slider-bound">1950</span>
+            <input id="pyramid-year-slider" class="year-slider" type="range" min="1950" max="2070" value="2024" step="1" aria-label="表示する年次を選択" />
+            <span class="slider-bound">2070</span>
+          </div>
+
+          <div id="pyramid-milestones" class="milestone-strip" aria-label="節目の年へ移動"></div>
+
+          <div class="pyramid-layout">
+            <div id="pyramid-svg-wrap"></div>
+
+            <aside class="pyramid-side" aria-live="polite">
+              <div class="pyr-year-head">
+                <div id="pyr-year-display" class="pyr-year-big">2024年</div>
+                <span id="pyr-status-badge" class="status-pill is-actual">実績値（総務省）</span>
+              </div>
+              <div class="pyr-shape-tag">形状分類：<strong id="pyr-shape-label">つぼ型</strong></div>
+
+              <div class="pyr-metrics-grid">
+                <div class="pyr-metric-box">
+                  <span>総人口</span>
+                  <strong id="pyr-total">1億2,380万人</strong>
+                </div>
+                <div class="pyr-metric-box">
+                  <span>高齢化率</span>
+                  <strong id="pyr-aging" class="is-red">29.3%</strong>
+                </div>
+                <div class="pyr-metric-box">
+                  <span>中位年齢</span>
+                  <strong id="pyr-median">49.4歳</strong>
+                </div>
+                <div class="pyr-metric-box">
+                  <span>現役世代 / 高齢者1人</span>
+                  <strong id="pyr-support" class="is-blue">2.0人</strong>
+                </div>
+              </div>
+
+              <div class="comp-bar-wrap">
+                <div class="comp-bar-title">年齢3区分の構成比</div>
+                <div class="comp-bar">
+                  <div id="pyr-bar-young" class="comp-seg is-young" style="width: 11.2%"></div>
+                  <div id="pyr-bar-working" class="comp-seg is-working" style="width: 59.6%"></div>
+                  <div id="pyr-bar-elderly" class="comp-seg is-elderly" style="width: 29.3%"></div>
+                </div>
+                <div class="comp-legend">
+                  <div>0–14歳<strong id="pyr-pct-young">11.2%</strong></div>
+                  <div>15–64歳<strong id="pyr-pct-working">59.6%</strong></div>
+                  <div>65歳以上<strong id="pyr-pct-elderly">29.3%</strong></div>
+                </div>
+              </div>
+
+              <p id="pyr-milestone-note" class="pyr-note-box"></p>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: 年齢3区分と支え手構造 -->
+    <section id="sec-structure" class="viz-section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-num">Chapter 02 · Population Structure &amp; Dependency</div>
+            <h2 class="section-title">総人口の縮小と「胴上げ型」から「肩車型」への転換</h2>
+            <p class="section-desc">
+              65歳以上人口は2043年頃（約3,953万人）をピークに緩やかに減少に転じますが、それ以上の速さで年少・生産年齢人口が縮小するため、
+              高齢化率は上昇し続けます。グラフ上をなぞると、各年の<strong>「支え手構造」</strong>が右側のピクトグラムに連動表示されます。
+            </p>
+          </div>
+        </div>
+
+        <div class="viz-card">
+          <div class="viz-toolbar">
+            <div class="toolbar-group">
+              <div class="segmented" role="group" aria-label="人口構造グラフ切替">
+                <button type="button" class="seg-btn is-active" data-structure-mode="count">実数（積み上げ面）</button>
+                <button type="button" class="seg-btn" data-structure-mode="share">構成比（100%積み上げ）</button>
+              </div>
+              <label class="toggle-label">
+                <input id="structure-band-toggle" type="checkbox" checked />
+                出生高位（1.64）・低位（1.13）の予測幅を表示
+              </label>
+            </div>
+            <div class="inline-legend">
+              <span class="legend-item"><i class="swatch swatch-young"></i>年少（0–14）</span>
+              <span class="legend-item"><i class="swatch swatch-working"></i>生産年齢（15–64）</span>
+              <span class="legend-item"><i class="swatch swatch-elderly"></i>老年（65+）</span>
+            </div>
+          </div>
+
+          <div class="structure-layout">
+            <div id="structure-svg-wrap"></div>
+
+            <aside class="support-card" aria-live="polite">
+              <div class="support-kicker">高齢者1人を何人の現役世代が支えるか</div>
+              <div class="support-head">
+                <span id="support-year" class="support-year-title">2024年（実績）</span>
+                <span id="support-metaphor" class="support-metaphor-pill">騎馬戦から肩車へ</span>
+              </div>
+              <div class="support-big-ratio">
+                <strong id="support-ratio-num">2.0人</strong>
+                <span>の現役世代（15–64歳）で1人を支える</span>
+              </div>
+
+              <div class="support-stage">
+                <div class="support-elderly-row">
+                  <div id="support-elderly-icon"></div>
+                  <span>65歳以上 × 1人</span>
+                </div>
+                <div class="support-divider"></div>
+                <div id="support-workers-icons" class="support-workers-row"></div>
+              </div>
+
+              <p id="support-desc" class="support-desc"></p>
+              <div id="support-presets" class="mini-year-strip" aria-label="年次プリセット"></div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: 出生数・死亡数と合計特殊出生率 -->
+    <section id="sec-vitals" class="viz-section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-num">Chapter 03 · Vital Statistics (1947–2024)</div>
+            <h2 class="section-title">開き続ける自然減の「ワニの口」と50年続く置換水準割れ</h2>
+            <p class="section-desc">
+              2005年に戦後初めて死亡数が出生数を上回って以降、人口の自然減は毎年拡大し続けています。
+              2024年の出生数は<strong>68万6,173人</strong>（初の70万人割れ）、死亡数は<strong>160万5,378人</strong>となり、
+              1年間で政令指定都市1つ分に匹敵する<strong>約91.9万人</strong>が自然減となりました。
+            </p>
+          </div>
+          <div class="inline-legend">
+            <span class="legend-item"><i class="swatch swatch-young"></i>出生数（自然増）</span>
+            <span class="legend-item"><i class="swatch swatch-elderly"></i>死亡数（自然減）</span>
+            <span class="legend-item"><i class="swatch swatch-amber"></i>合計特殊出生率</span>
+          </div>
+        </div>
+
+        <div class="viz-card">
+          <div id="vitals-svg-wrap"></div>
+
+          <div class="insight-strip">
+            <div class="insight-item">
+              <strong>1974年から半世紀続く「2.07割れ」</strong>
+              <p>人口を長期維持する置換水準（2.07）を1974年（2.05）に下回って以来、一度も回復せず、母親世代そのものの減少が少子化をさらに加速させています。</p>
+            </div>
+            <div class="insight-item">
+              <strong>出生数は第1次ベビーブームの約4分の1</strong>
+              <p>1949年の269.7万人から2024年は68.6万人へ。社人研の中位推計で想定されていた「70万人割れ」より十数年早いペースで減少が進行しています。</p>
+            </div>
+            <div class="insight-item">
+              <strong>多死社会の本格化</strong>
+              <p>団塊の世代が後期高齢者（75歳以上）に入り、死亡数は2040年頃（約167万人）まで増加を続ける見通し。自然減の拡大は構造的に避けられない局面です。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: 47都道府県の地域差 -->
+    <section id="sec-prefectures" class="viz-section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-num">Chapter 04 · Regional Disparities across 47 Prefectures</div>
+            <h2 class="section-title">「東京一極集中」と「地方の急減」——47都道府県の2極化構造</h2>
+            <p class="section-desc">
+              通常の地図では面積の小さな東京・大阪・沖縄が埋もれてしまいます。全47都道府県を同面積で配置した<strong>日本列島タイル地図</strong>と、
+              <strong>高齢化率 × 合計特殊出生率の散布図</strong>を連動させることで、地域ごとの異なる課題（都市の極低出生率 vs 地方の若年流出）が浮かび上がります。
+            </p>
+          </div>
+        </div>
+
+        <div class="viz-card">
+          <div class="viz-toolbar">
+            <div class="toolbar-group">
+              <div class="segmented" role="group" aria-label="地図の表示指標を選択">
+                <button type="button" class="seg-btn is-active" data-pref-metric="agingRate">高齢化率（%）</button>
+                <button type="button" class="seg-btn" data-pref-metric="tfr">合計特殊出生率</button>
+                <button type="button" class="seg-btn" data-pref-metric="popChange">人口増減率（前年比）</button>
+              </div>
+            </div>
+            <div class="toolbar-group">
+              <span class="pref-panel-sub">タイルまたは散布図の点をクリックすると下部カードに詳細を固定表示</span>
+            </div>
+          </div>
+
+          <div id="pref-region-filters" class="region-filter-row" aria-label="地方ブロック絞り込み"></div>
+
+          <div class="pref-grid">
+            <div>
+              <h3 class="pref-panel-title">
+                <span>日本列島タイル地図（2024年公式統計）</span>
+                <span class="pref-panel-sub">47都道府県 等面積カラムマップ</span>
+              </h3>
+              <div id="pref-tilemap-wrap"></div>
+              <div class="map-legend">
+                <div id="pref-legend-bar" class="map-legend-bar"></div>
+                <div class="map-legend-labels">
+                  <span id="pref-legend-min"></span>
+                  <span id="pref-legend-max"></span>
+                </div>
+                <div id="pref-legend-source" class="map-legend-source"></div>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="pref-panel-title">
+                <span>高齢化率 × 合計特殊出生率（4象限分析）</span>
+                <span class="pref-panel-sub">破線は全国平均（29.3% / 1.15）</span>
+              </h3>
+              <div id="pref-scatter-wrap"></div>
+            </div>
+          </div>
+
+          <div id="pref-detail-card" class="pref-detail-card" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: 国際比較 -->
+    <section id="sec-international" class="viz-section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <div class="section-num">Chapter 05 · International Comparison</div>
+            <h2 class="section-title">欧米の3〜5倍の速さで進んだ日本の高齢化と、東アジアの現在</h2>
+            <p class="section-desc">
+              高齢化率が7%（高齢化社会）から14%（高齢社会）に倍増するまでの<strong>「倍加年数」</strong>を比べると、
+              フランスが127年、スウェーデンが85年かけたのに対し、日本はわずか<strong>24年</strong>（1970→1994年）。
+              世界最先端の超高齢社会となった日本の歩みは、いま韓国（18年）や中国（23年）など東アジア諸国がさらに速いペースで追いかけています。
+            </p>
+          </div>
+        </div>
+
+        <div class="viz-card">
+          <div class="viz-toolbar">
+            <div id="intl-legend" class="region-filter-row" style="margin-bottom:0" aria-label="国の強調表示"></div>
+            <span class="pref-panel-sub">国名にカーソルを合わせると両グラフが連動強調されます</span>
+          </div>
+
+          <div class="intl-grid">
+            <div>
+              <h3 class="pref-panel-title">
+                <span>主要国の高齢化率推移（1950〜2050年）</span>
+                <span class="pref-panel-sub">65歳以上人口割合（%）</span>
+              </h3>
+              <div id="intl-traj-wrap"></div>
+            </div>
+
+            <div>
+              <h3 class="pref-panel-title">
+                <span>高齢化率「倍加年数」（7% → 14%）</span>
+                <span class="pref-panel-sub">短いほど急速な高齢化</span>
+              </h3>
+              <div id="intl-doubling-wrap"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 出典・データ設計 -->
+    <section id="sec-sources" class="sources-section">
+      <div class="container">
+        <div class="section-num">Methodology &amp; Official Sources</div>
+        <h2 class="section-title" style="margin-bottom:6px">データ出典と可視化設計について</h2>
+        <p class="section-desc">
+          本ページのすべての数値は日本政府の公式統計および国際機関の公表データに基づいています。実績値と将来推計を視覚的に明確に分離し、色覚多様性にも配慮した配色設計を行っています。
+        </p>
+
+        <div class="sources-grid">
+          <div class="source-card">
+            <h4>使用した公式統計ソース</h4>
+            <ul>
+              <li><strong>総務省統計局「国勢調査」</strong>（1950〜2020年・5年ごと、年齢3区分別総人口）</li>
+              <li><strong>総務省統計局「人口推計」</strong>（2024年10月1日現在・確定値、全国および47都道府県別高齢化率・人口増減率）</li>
+              <li><strong>厚生労働省「人口動態統計」</strong>（1947〜2024年確定数、出生数・死亡数・全国および47都道府県別合計特殊出生率）</li>
+              <li><strong>国立社会保障・人口問題研究所「日本の将来推計人口（令和5年推計）」</strong>（2025〜2070年、出生中位・高位・低位／死亡中位推計）</li>
+              <li><strong>内閣府「高齢社会白書」・国連「World Population Prospects」</strong>（主要国の高齢化率推移および倍加年数）</li>
+            </ul>
+          </div>
+
+          <div class="source-card">
+            <h4>可視化の技法と注記</h4>
+            <p>
+              ・1970年以前の総務省「国勢調査」および1972年以前の「人口動態統計」には沖縄県が含まれません。<br />
+              ・人口ピラミッド（Chapter 01）は、歴史的出生コホート（団塊・ひのえうま・団塊ジュニア等）と男女別平均寿命推移によるコホートモデルを、各年の公式「年齢3区分別人口（0–14歳・15–64歳・65歳以上）」の合計値に厳密キャリブレーションして描画しています。<br />
+              ・外部ライブラリやAPI通信に依存せず、すべて静的ファイルと軽量なネイティブSVGで構築しているため、GitHub Pages上で高速・安定して動作します。
+            </p>
+          </div>
+        </div>
+
+        <footer class="site-footer">
+          <span>日本の少子高齢化 データビジュアライゼーション（1950–2070）</span>
+          <span>Built with Vanilla ES Modules &amp; Custom SVG · Ready for GitHub Pages</span>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
